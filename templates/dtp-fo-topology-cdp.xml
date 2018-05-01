@@ -1,0 +1,36 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>{$DEVICE-NAME}</name>
+      <config>
+
+      <cdp xmlns="http://tail-f.com/ned/cisco-ios-xr"></cdp>
+
+      <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+      <TenGigE foreach="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='TenGigE']}">
+        <id>{current()/port-name}</id>
+          <cdp/>
+          <cdp tags="delete" when="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/function-objects/cdp/enable='false'}"/>
+      </TenGigE>
+      <FortyGigE foreach="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='FortyGigE']}">
+        <id>{current()/port-name}</id>
+          <cdp/>
+          <cdp tags="delete" when="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/function-objects/cdp/enable='false'}"/>
+      </FortyGigE>
+      <HundredGigE foreach="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
+        <id>{current()/port-name}</id>
+          <cdp/>
+          <cdp tags="delete" when="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/function-objects/cdp/enable='false'}"/>
+      </HundredGigE>
+      <preconfigure>
+          <HundredGigE foreach="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
+            <id>{current()/port-name}</id>
+            <cdp/>
+            <cdp tags="delete" when="{/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/function-objects/cdp/enable='false'}"/>
+          </HundredGigE>
+      </preconfigure>
+      </interface>
+      </config>
+  </device>
+  </devices>
+</config>

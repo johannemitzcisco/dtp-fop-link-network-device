@@ -1,0 +1,65 @@
+module dtp-fo-cdp {
+
+  namespace "http://www.cisco.com/dtp-fo-cdp";
+  prefix dtp-fo-cdp;
+
+  import dtp-network { prefix dtpn; }
+  import ietf-inet-types { prefix inet; }
+  import tailf-common { prefix tailf; }
+  import tailf-ncs { prefix ncs; }
+
+  description
+    "This is an add on model to the dtp-network package/service";
+
+  revision 2017-11-28 {
+    description
+      "Initial revision.";
+  }
+
+  grouping fo-defs {
+    list cdp {
+      key name;
+      uses dtpn:function-object;
+    }
+  }
+  grouping function-objects {
+    leaf enable {
+      type boolean;
+      default "true";
+    }
+  }
+
+  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:function-objects {
+    list cdp {
+      max-elements 1;
+      key "function-object-name";
+      leaf function-object-name {
+        type leafref {
+          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:topology/cdp/name";
+        }
+      }
+      uses function-objects;
+    }
+  }
+  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:function-objects {
+    list cdp {
+      max-elements 1;
+      key "function-object-name";
+      leaf function-object-name {
+        type leafref {
+          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side/cdp/name";
+        }
+      }
+      uses function-objects;
+    }
+  }
+
+  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side {
+    uses fo-defs;
+  }
+
+  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:topology {
+    uses fo-defs;
+  }
+
+}
