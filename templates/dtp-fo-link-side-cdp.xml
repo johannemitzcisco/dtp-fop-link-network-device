@@ -4,44 +4,42 @@
     <name>{$DEVICE-NAME}</name>
       <config>
         <?set-context-node {/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]}?>
-        <?set CDP-ENABLE={function-objects/cdp[function-object-name=$FO-NAME]/enable}?>
 
-        <cdp xmlns="http://tail-f.com/ned/cisco-ios-xr" when="{$CDP-ENABLE = 'true'}"></cdp>
-        <cdp xmlns="http://tail-f.com/ned/cisco-ios-xr" when="{$CDP-ENABLE = 'false'}" tags="delete"></cdp>
+        <cdp xmlns="http://tail-f.com/ned/cisco-ios-xr" when="link/side/function-objects/cdp[function-object-name=$FO-NAME]/enable = 'true'}"></cdp>
         
         <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
           <TenGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='TenGigE']}">
             <id>{current()/port-name}</id>
               <cdp/>
-              <cdp tags="delete" when="{$CDP-ENABLE = 'false'}"/>
+              <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
           </TenGigE>
           <FortyGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='FortyGigE']}">
             <id>{current()/port-name}</id>
               <cdp/>
-              <cdp tags="delete" when="{$CDP-ENABLE = 'false'}"/>
+              <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
           </FortyGigE>
           <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
             <id>{current()/port-name}</id>
               <cdp/>
-              <cdp tags="delete" when="{$CDP-ENABLE = 'false'}"/>
+              <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
           </HundredGigE>
           <preconfigure>
               <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
                 <id>{current()/port-name}</id>
                 <cdp/>
-                <cdp tags="delete" when="{$CDP-ENABLE = 'false'}"/>
+                <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
               </HundredGigE>
           </preconfigure>
         </interface>
 
-        <cdp xmlns="http://tail-f.com/ned/cisco-nx">
-          <enable>{$CDP-ENABLE}</enable>
+        <cdp xmlns="http://tail-f.com/ned/cisco-nx"  when="link/side/function-objects/cdp[function-object-name=$FO-NAME]/enable = 'true'}">
+          <enable>true</enable>
         </cdp>
         <interface xmlns="http://tail-f.com/ned/cisco-nx" foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical}">
           <Ethernet foreach="{port[port-type='Ethernet']}">
             <name>{current()/port-name}</name>
             <cdp>
-              <enable>{$CDP-ENABLE}</enable>
+              <enable>{current()/../../../function-objects/cdp[function-object-name=$FO-NAME]/enable}</enable>
             </cdp>
           </Ethernet>
         </interface>
