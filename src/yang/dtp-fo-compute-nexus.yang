@@ -1,7 +1,7 @@
-module dtp-fo-cdp {
+module dtp-fo-compute-nexus {
 
-  namespace "http://www.cisco.com/dtp-fo-cdp";
-  prefix dtp-fo-cdp;
+  namespace "http://www.cisco.com/dtp-fo-compute-cdp";
+  prefix dtp-foi-compute-cdp;
 
   import dtp-network { prefix dtpn; }
   import ietf-inet-types { prefix inet; }

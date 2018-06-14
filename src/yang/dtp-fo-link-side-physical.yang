@@ -1,7 +1,7 @@
-module dtp-fo-link-physical {
+module dtp-fo-link-side-physical {
 
-  namespace "http://www.cisco.com/dtp-fo-link-physical";
-  prefix dtp-fo-link-physical;
+  namespace "http://www.cisco.com/dtp-fo-link-side-physical";
+  prefix dtp-fo-link-side-physical;
 
   import dtp-network { prefix dtpn; }
   import ietf-inet-types { prefix inet; }
