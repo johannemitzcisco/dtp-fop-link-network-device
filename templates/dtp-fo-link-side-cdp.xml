@@ -8,23 +8,23 @@
         <cdp xmlns="http://tail-f.com/ned/cisco-ios-xr" when="link/side/function-objects/cdp[function-object-name=$FO-NAME]/enable = 'true'}"></cdp>
         
         <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
-          <TenGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='TenGigE']}">
+          <TenGigE foreach="{link/side[node=$NODE-NAME]/side-type/physical/port[port-type='TenGigE']}">
             <id>{current()/port-name}</id>
               <cdp/>
               <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
           </TenGigE>
-          <FortyGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='FortyGigE']}">
+          <FortyGigE foreach="{link/side[node=$NODE-NAME]/side-type/physical/port[port-type='FortyGigE']}">
             <id>{current()/port-name}</id>
               <cdp/>
               <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
           </FortyGigE>
-          <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
+          <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/physical/port[port-type='HundredGigE']}">
             <id>{current()/port-name}</id>
               <cdp/>
               <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
           </HundredGigE>
           <preconfigure>
-              <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
+              <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/physical/port[port-type='HundredGigE']}">
                 <id>{current()/port-name}</id>
                 <cdp/>
                 <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
@@ -35,7 +35,7 @@
         <cdp xmlns="http://tail-f.com/ned/cisco-nx"  when="link/side/function-objects/cdp[function-object-name=$FO-NAME]/enable = 'true'}">
           <enable>true</enable>
         </cdp>
-        <interface xmlns="http://tail-f.com/ned/cisco-nx" foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical}">
+        <interface xmlns="http://tail-f.com/ned/cisco-nx" foreach="{link/side[node=$NODE-NAME]/side-type/physical}">
           <Ethernet foreach="{port[port-type='Ethernet']}">
             <name>{current()/port-name}</name>
             <cdp>

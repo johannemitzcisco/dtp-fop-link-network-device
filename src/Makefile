@@ -13,6 +13,8 @@ FXS = $(SRC:yang/%.yang=../load-dir/%.fxs)
 # YANGPATH += ../../<ned-name>/src/ncsc-out/modules/yang \
 # 	../../<pkt-name>/src/yang
 YANGPATH += ../../dtp-network/src/yang
+YANGPATH += ../../dtp-fop-node-csp2100/src/yang
+YANGPATH += ../../dtp-fop-node-nexus9k/src/yang
 
 NCSCPATH   = $(YANGPATH:%=--yangpath %)
 YANGERPATH = $(YANGPATH:%=--path %)

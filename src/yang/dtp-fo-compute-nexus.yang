@@ -1,9 +1,11 @@
 module dtp-fo-compute-nexus {
 
-  namespace "http://www.cisco.com/dtp-fo-compute-cdp";
-  prefix dtp-foi-compute-cdp;
+  namespace "http://www.cisco.com/dtp-fo-compute-nexus";
+  prefix dtp-fo-compute-nexus;
 
   import dtp-network { prefix dtpn; }
+  import dtp-fo-csp2100-role { prefix csp; }
+  import dtp-fo-nexus9k-role { prefix n9k; }
   import ietf-inet-types { prefix inet; }
   import tailf-common { prefix tailf; }
   import tailf-ncs { prefix ncs; }
@@ -17,48 +19,48 @@ module dtp-fo-compute-nexus {
   }
 
   grouping fo-defs {
-    list cdp {
+    list nexus-to-csp2100 {
       key name;
       uses dtpn:function-object;
     }
   }
   grouping function-objects {
-    leaf enable {
-      type boolean;
-      default "true";
+    leaf link-type {
+      type enumeration {
+        enum "Port Channel";
+      }
+      default "Port Channel";
+    }
+    leaf portchannel-id {
+      when "../link-type='Port Channel'";
+      mandatory true;
+      type uint8;
+    }
+    leaf portchannel-name {
+      when "../link-type='Port Channel'";
+      mandatory true;
+      type string;
     }
   }
 
-  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:function-objects {
-    list cdp {
+  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:function-objects {
+    list nexus-to-csp2100 {
+//      when "../../../dtpn:node[dtpn:name=../dtpn:side/dtpn:node]/dtpn:function-objects/n9k:nexus9k-role/n9k:roles='SAE Standalone Switch'" {
+//        tailf:dependency "/dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:function-objects/n9k:nexus9k-role/n9k:roles";
+//      }
+      // and /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:node[dtpn:name=current()/../../dtpn:side/dtpn:node/dtpn:name]/dtpn:function-objects/csp:csp2100-role/csp:roles='SAE Compute'";
       max-elements 1;
       key "function-object-name";
       leaf function-object-name {
         type leafref {
-          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:topology/cdp/name";
+          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:link/nexus-to-csp2100/name";
         }
       }
       uses function-objects;
     }
   }
-  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:function-objects {
-    list cdp {
-      max-elements 1;
-      key "function-object-name";
-      leaf function-object-name {
-        type leafref {
-          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side/cdp/name";
-        }
-      }
-      uses function-objects;
-    }
-  }
 
-  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side {
-    uses fo-defs;
-  }
-
-  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:topology {
+  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:link {
     uses fo-defs;
   }
 

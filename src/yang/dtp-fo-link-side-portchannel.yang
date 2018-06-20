@@ -1,0 +1,37 @@
+module dtp-fo-link-side-portchannel {
+
+  namespace "http://www.cisco.com/dtp-fo-link-side-portchannel";
+  prefix dtp-fo-link-side-portchannel;
+
+  import dtp-network { prefix dtpn; }
+  import ietf-inet-types { prefix inet; }
+  import tailf-common { prefix tailf; }
+  import tailf-ncs { prefix ncs; }
+
+  description
+    "This is an add on model to the dtp-network package/service";
+
+  revision 2017-11-28 {
+    description
+      "Initial revision.";
+  }
+
+  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:side-type/dtpn:side-type {
+    container portchannel {
+      list link-side {
+        key "link side";
+        leaf link {
+          type leafref {
+            path "../../../../../../dtpn:link/dtpn:name";
+          }
+        }
+        leaf side {
+          type leafref {
+            path "../../../../../../dtpn:link[dtpn:name=current()/../link]/dtpn:side/dtpn:name";
+          }
+        }
+      }
+    }
+  }
+
+}

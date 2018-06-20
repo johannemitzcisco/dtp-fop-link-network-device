@@ -18,10 +18,7 @@ module dtp-fo-link-side-physical {
 
   augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:side-type/dtpn:side-type {
     container physical {
-      list port {
-        min-elements 1;
-//        max-elements 2;
-        key "port-type port-name";
+      container port {
         leaf port-type {
           type enumeration {
             enum "Ethernet";

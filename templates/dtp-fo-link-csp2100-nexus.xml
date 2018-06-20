@@ -3,46 +3,45 @@
   <device>
     <name>{$DEVICE-NAME}</name>
       <config>
-        <?set-context-node {/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]}?>
+        <?set-context-node {/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=$LINK-NAME]/side[name=$SIDE-NAME]}?>
 
-        <cdp xmlns="http://tail-f.com/ned/cisco-ios-xr" when="link/side/function-objects/cdp[function-object-name=$FO-NAME]/enable = 'true'}"></cdp>
-        
-        <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
-          <TenGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='TenGigE']}">
-            <id>{current()/port-name}</id>
-              <cdp/>
-              <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
-          </TenGigE>
-          <FortyGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='FortyGigE']}">
-            <id>{current()/port-name}</id>
-              <cdp/>
-              <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
-          </FortyGigE>
-          <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
-            <id>{current()/port-name}</id>
-              <cdp/>
-              <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
-          </HundredGigE>
-          <preconfigure>
-              <HundredGigE foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical/port[port-type='HundredGigE']}">
-                <id>{current()/port-name}</id>
-                <cdp/>
-                <cdp tags="delete" when="{../../../function-objects/cdp[function-object-name=$FO-NAME]/enable='false'}"/>
-              </HundredGigE>
-          </preconfigure>
-        </interface>
-
-        <cdp xmlns="http://tail-f.com/ned/cisco-nx"  when="link/side/function-objects/cdp[function-object-name=$FO-NAME]/enable = 'true'}">
-          <enable>true</enable>
-        </cdp>
-        <interface xmlns="http://tail-f.com/ned/cisco-nx" foreach="{link/side[node=$NODE-NAME]/side-type/dtp-fo-link-physical:physical}">
-          <Ethernet foreach="{port[port-type='Ethernet']}">
-            <name>{current()/port-name}</name>
-            <cdp>
-              <enable>{current()/../../../function-objects/cdp[function-object-name=$FO-NAME]/enable}</enable>
-            </cdp>
+        <?foreach {side-type/portchannel/link-side}?>
+        <interface xmlns="http://tail-f.com/ned/cisco-nx">
+          <Ethernet>
+            <name>{string(/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=current()/link]/side[name=current()/side]/side-type/physical/port/port-name)}</name>
+            <description>{string(/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/node[name=current()/../../../../side[name!=current()/../../../name]/node]/device-name)} ({string(/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=current()/link]/side[name!=current()/side]/side-type/physical/port/port-type)} {string(/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=current()/link]/side[name!=current()/side]/side-type/physical/port/port-name)})</description>
+            <switchport>
+              <mode>trunk</mode>
+            </switchport>
+            <channel-group>
+              <id>{string(current()/../../../../function-objects/nexus-to-csp2100[function-object-name=$FO-NAME]/portchannel-id)}</id>
+              <mode>active</mode>
+            </channel-group>
           </Ethernet>
+          <port-channel>
+            <name>{string(current()/../../../../function-objects/nexus-to-csp2100[function-object-name=$FO-NAME]/portchannel-id)}</name>
+            <switchport>
+              <mode>trunk</mode>
+            </switchport>
+            <description>{string(/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/node[name=current()/../../../../side[name!=current()/../../../name]/node]/device-name)} ({string(current()/../../../../function-objects/nexus-to-csp2100[function-object-name=$FO-NAME]/portchannel-name)})</description>
+          </port-channel>
         </interface>
+
+        <pnics xmlns="http://www.cisco.com/ns/test/pnic">
+          <pnic>
+            <name>{current()/../../../../function-objects/nexus-to-csp2100[function-object-name=$FO-NAME]/portchannel-name}</name>
+            <type>port_channel</type>
+            <bond_mode>active-backup</bond_mode>
+            <lacp_type>active</lacp_type>
+          </pnic>
+        </pnics>
+        <pnics xmlns="http://www.cisco.com/ns/test/pnic">
+          <pnic>
+            <name>{string(/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=current()/link]/side[name=current()/side]/side-type/physical/port/port-name)}</name>
+            <member_of>{current()/../../../../function-objects/nexus-to-csp2100[function-object-name=$FO-NAME]/portchannel-name}</member_of>
+          </pnic>
+        </pnics>
+        <?end?>
 
       </config>
   </device>
