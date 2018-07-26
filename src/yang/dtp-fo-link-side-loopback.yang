@@ -1,0 +1,55 @@
+module dtp-fo-link-side-loopback {
+
+  namespace "http://www.cisco.com/dtp-fo-link-side-loopback";
+  prefix dtp-fo-link-side-loopback;
+
+  import dtp-network { prefix dtpn; }
+  import dtp-fo-link-side-logical { prefix dtplsl; }
+  import ietf-inet-types { prefix inet; }
+  import tailf-common { prefix tailf; }
+  import tailf-ncs { prefix ncs; }
+
+  description
+    "This is an add on model to the dtp-network package/service";
+
+  revision 2017-11-28 {
+    description
+      "Initial revision.";
+  }
+
+  grouping fo-defs {
+    list loopback {
+      key name;
+      uses dtpn:function-object;
+    }
+  }
+
+  grouping loopback-objects {
+    leaf ip-address {
+      type inet:ipv4-address;
+    }
+    leaf ip-mask {
+      type inet:ipv4-address;
+    }
+  }
+
+  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:function-objects {
+//    when "/dtpn:dtp/dtpn:function-object-definitions/dtpn:link/link-side-loopback/name";
+    when "../dtpn:side-type/dtplsl:logical/dtplsl:port[dtplsl:port-type = 'Loopback']";
+    list loopback {
+      max-elements 1;
+      key "function-object-name";
+      leaf function-object-name {
+        type leafref {
+          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side/loopback/name";
+        }
+      }
+      uses loopback-objects;
+    }
+  }
+
+  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side {
+    uses fo-defs;
+  }
+
+}

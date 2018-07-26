@@ -7,5 +7,11 @@
   <required-package>
     <name>dtp-network</name>
   </required-package>
+  <required-package>
+    <name>dtp-fop-node-csp2100</name>
+  </required-package>
+  <required-package>
+    <name>dtp-fop-node-nexus9k</name>
+  </required-package>
 
 </ncs-package>

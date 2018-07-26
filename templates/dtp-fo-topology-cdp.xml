@@ -46,6 +46,26 @@
           </Ethernet>
         </interface>
 
+        <cdp xmlns="urn:ios">
+          <run>{$CDP-ENABLE}</run>
+        </cdp>
+        <interface xmlns="urn:ios" foreach="{link/side[node=$NODE-NAME]/side-type/logical}">
+          <Loopback foreach="{port[port-type='Loopback']}">
+            <name>{current()/port-name}</name>
+            <cdp>
+              <enable>{$CDP-ENABLE}</enable>
+            </cdp>
+          </Loopback>
+        </interface>
+        <interface xmlns="urn:ios" foreach="{link/side[node=$NODE-NAME]/side-type/physical}">
+          <GigabitEthernet foreach="{port[port-type='GigabitEthernet']}">
+            <name>{current()/port-name}</name>
+            <cdp>
+              <enable>{$CDP-ENABLE}</enable>
+            </cdp>
+          </GigabitEthernet>
+        </interface>
+
       </config>
   </device>
   </devices>

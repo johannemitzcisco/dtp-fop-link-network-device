@@ -1,0 +1,29 @@
+<config xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+  <device>
+    <name>{$DEVICE-NAME}</name>
+      <config>
+<?save-context DTP?>
+<?set-context-node {/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=$LINK-NAME]/side[node=$NODE-NAME]}?>
+<?save-context SIDE?>
+<?set-context-node {/network[name=$SERVICE-NAME]/topology[name=$TOPOLOGY-NAME]/link[name=$LINK-NAME]/side[node=$NODE-NAME]/function-objects/loopback[function-object-name=$FO-NAME]}?>
+<?save-context SIDE-FUNCTION-OBJECT?>
+
+        <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <?switch-context SIDE?>
+          <Loopback>
+            <id>{side-type/logical/port/port-name}</id>
+            <?switch-context SIDE-FUNCTION-OBJECT?>
+            <ipv4>
+              <address>
+                <ip>{ip-address}</ip>
+                <mask>{ip-mask}</mask>
+              </address>
+            </ipv4>
+          </Loopback>
+        </interface>
+
+      </config>
+  </device>
+  </devices>
+</config>

@@ -1,7 +1,7 @@
-module dtp-fo-link-side-physical {
+module dtp-fo-link-side-logical {
 
-  namespace "http://www.cisco.com/dtp-fo-link-side-physical";
-  prefix dtp-fo-link-side-physical;
+  namespace "http://www.cisco.com/dtp-fo-link-side-logical";
+  prefix dtp-fo-link-side-logical;
 
   import dtp-network { prefix dtpn; }
   import ietf-inet-types { prefix inet; }
@@ -18,17 +18,12 @@ module dtp-fo-link-side-physical {
 
   typedef port-type {
     type enumeration {
-//      enum "Ethernet";
-      enum "GigabitEthernet";
-//      enum "TenGigabitEthernet";
-//      enum "TenGigE";
-//      enum "FortyGigE";
-//      enum "HundredGigE";
+      enum "Loopback";
     }
   }
 
   augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:side-type/dtpn:side-type {
-    container physical {
+    container logical {
       container port {
         leaf port-type {
           type port-type;
