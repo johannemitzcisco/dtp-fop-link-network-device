@@ -40,4 +40,37 @@ module dtp-fo-link-side-physical {
     }
   }
 
+  grouping fo-defs {
+    list physical {
+      key name;
+      uses dtpn:function-object;
+    }
+  }
+
+  grouping physical-objects {
+    leaf ipv4-address {
+      type inet:ipv4-address;
+    }
+    leaf ipv4-mask {
+      type inet:ipv4-address;
+    }
+  }
+
+  augment /dtpn:dtp/dtpn:network/dtpn:topology/dtpn:link/dtpn:side/dtpn:function-objects {
+    list physical {
+      max-elements 1;
+      key "function-object-name";
+      leaf function-object-name {
+        type leafref {
+          path "/dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side/physical/name";
+        }
+      }
+      uses physical-objects;
+    }
+  }
+
+  augment /dtpn:dtp/dtpn:function-object-definitions/dtpn:link/dtpn:side {
+    uses fo-defs;
+  }
+
 }
